@@ -1,5 +1,3 @@
-Okay, I can do that. Here is an updated readme.md file for your code:
-
 # IPLookup
 
 This is a simple Node.js script that takes an IP address as an argument and prints some information about its location and service provider.
