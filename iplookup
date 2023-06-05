@@ -1,0 +1,58 @@
+#!/usr/bin/env node
+// Import the built-in modules
+const process = require("process");
+const http = require("http");
+
+// Check if the user provided an argument
+if (process.argv.length < 3) {
+  console.log("Please enter an IP address as an argument.");
+  process.exit();
+}
+
+// Get the IP address from the argument
+const ip = process.argv[2];
+
+// Define the API URL with the query and fields parameters
+const api_url = `http://ip-api.com/json/${ip}?fields=status,continent,country,regionName,city,timezone,currency,isp,org,mobile,proxy,hosting`;
+
+// Make a GET request to the API
+http.get(api_url, (res) => {
+  // Handle the response
+  let data = "";
+
+  // Concatenate the chunks of data
+  res.on("data", (chunk) => {
+    data += chunk;
+  });
+
+  // Parse the JSON data when the response ends
+  res.on("end", () => {
+    const response = JSON.parse(data);
+
+    // Check if the response status is success or fail
+    const status = response.status;
+
+    if (status == "success") {
+      // Print the relevant data in a pretty format
+      console.log(`IP address: ${ip}`);
+      console.log(`Continent: ${response.continent}`);
+      console.log(`Country: ${response.country}`);
+      console.log(`Region: ${response.regionName}`);
+      console.log(`City: ${response.city}`);
+      console.log(`Timezone: ${response.timezone}`);
+      console.log(`Currency: ${response.currency}`);
+      console.log(`ISP: ${response.isp}`);
+      console.log(`Organization: ${response.org}`);
+      console.log(`Mobile: ${response.mobile}`);
+      console.log(`Proxy: ${response.proxy}`);
+      console.log(`Hosting: ${response.hosting}`);
+    } else {
+      // Print the error message
+      const message = response.message;
+      console.log(`Error: ${message}`);
+    }
+  });
+}).on("error", (err) => {
+  // Handle any errors
+  console.error(err.message);
+});
